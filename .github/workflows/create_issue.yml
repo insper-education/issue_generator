@@ -34,18 +34,19 @@ jobs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          const issueDir = './issues'; // Replace with the actual directory path
+          const issueDir = './issues';
+
+          const files = fs.readdirSync(issueDir).filter(file => path.extname(file) === '.md').sort();
           
-          fs.readdirSync(issueDir).forEach(file => {
-            if (path.extname(file) === '.md') {
-              const issueTitle = path.basename(file, '.md');
-              const issueBody = fs.readFileSync(path.join(issueDir, file), 'utf8');
-              const issue = {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: issueTitle,
-                body: issueBody
-              };
-              github.issues.create(issue);
+          files.forEach(file => {
+            const issueTitle = path.basename(file, '.md');
+            const issueBody = fs.readFileSync(path.join(issueDir, file), 'utf8');
+            const issue = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody
+            };
+            github.issues.create(issue);
             }
           });
