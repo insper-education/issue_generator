@@ -11,4 +11,4 @@ Este action cria um issue nos repositorios dos alunos **APOS** o primeiro push.
 A action consiste de dois estagios, *Check for open issues* conta o numero de issues **abertos** salvando em uma variavel booleana (True se existem open-issues). 
 
 O ssegundo estagio cria um novo issue, customize modificando *title* e *body*.
-sdsdsdsdsaaa
+sdsdsdsdsaaaaaa
