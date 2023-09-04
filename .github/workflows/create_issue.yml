@@ -34,11 +34,14 @@ jobs:
         script: |
           const fs = require('fs');
           const path = require('path');
+          const util = require('util');
           const issueDir = './issues'; // Replace with the actual directory path
-          
+
+          const sleep = util.promisify(setTimeout);
+
           const files = fs.readdirSync(issueDir).filter(file => path.extname(file) === '.md').sort();
-          
-          files.forEach(file => {
+
+          for (const file of files) {
             const issueTitle = path.basename(file, '.md');
             const issueBody = fs.readFileSync(path.join(issueDir, file), 'utf8');
             const issue = {
@@ -48,5 +51,5 @@ jobs:
               body: issueBody
             };
             await github.issues.create(issue);
-            await sleep(2000);
-          });
+            await sleep(2000);  // Sleep for 2 seconds
+          }
