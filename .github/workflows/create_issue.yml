@@ -1,4 +1,4 @@
-name: Create Issue on First Push
+name: Create Issues on First Push
 
 on:
   push:
@@ -6,13 +6,18 @@ on:
       - main
 
 jobs:
-  create_issue:
+  create_issues:
     runs-on: ubuntu-latest
     steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
     - name: Check for open issues
       id: check_issues
       run: |
-        ISSUES=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \\n       -H "Accept: application/vnd.github.v3+json" \\n       https://api.github.com/repos/${{ github.repository }}/issues?state=open)
+        ISSUES=$(curl -H "Authorization: token ${{ secrets.ISSUE_GENERATOR }}" \
+                     -H "Accept: application/vnd.github.v3+json" \
+                     https://api.github.com/repos/${{ github.repository }}/issues?state=open)
         COUNT=$(echo "$ISSUES" | jq '. | length')
         if [[ "$COUNT" -eq 0 ]]; then
           echo "::set-output name=has_issues::false"
@@ -21,16 +26,26 @@ jobs:
         fi
       continue-on-error: true
 
-    - name: 1 - Pino Buzzer
+    - name: Create Issues
       if: steps.check_issues.outputs.has_issues == 'false'
       uses: actions/github-script@v3
       with:
         github-token: ${{secrets.ISSUE_GENERATOR}}
         script: |
-          const issue = {
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            title: '1 - Pino Buzzer',
-            body: '\nDefinir e configurar pino que será usado para conectar o buzzer.\n- [ ] Atualizar `README.md` com definição do pino.\n- [ ] Inserir `#defines` no  `main.c` com valores certos\n```c\n#define BUZZER_PIO\n#define BUZZER_PIO_ID\n#define BUZZER_PIO_IDX\n#define BUZZER_PIO_IDX_MASK\n```\n- [ ] Atualizar função  `init()` configurando o pino do buzzer como output\nDicas (opcional):\n- [ ] Criar função `void set_buzzer();` que coloca 1 no pino do buzzer\n- [ ] Criar função `void clear_buzzer();` que coloca 0 no pino do buzzer'
-          }
-          github.issues.create(issue)
+          const fs = require('fs');
+          const path = require('path');
+          const issueDir = './issues'; // Replace with the actual directory path
+          
+          fs.readdirSync(issueDir).forEach(file => {
+            if (path.extname(file) === '.md') {
+              const issueTitle = path.basename(file, '.md');
+              const issueBody = fs.readFileSync(path.join(issueDir, file), 'utf8');
+              const issue = {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                body: issueBody
+              };
+              github.issues.create(issue);
+            }
+          });
