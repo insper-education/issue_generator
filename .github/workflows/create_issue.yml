@@ -34,8 +34,8 @@ jobs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          const issueDir = './issues';
-
+          const issueDir = './issues'; // Replace with the actual directory path
+          
           const files = fs.readdirSync(issueDir).filter(file => path.extname(file) === '.md').sort();
           
           files.forEach(file => {
@@ -48,5 +48,4 @@ jobs:
               body: issueBody
             };
             github.issues.create(issue);
-            }
           });
