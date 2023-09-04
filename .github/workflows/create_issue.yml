@@ -47,5 +47,6 @@ jobs:
               title: issueTitle,
               body: issueBody
             };
-            github.issues.create(issue);
+            await github.issues.create(issue);
+            await sleep(2000);
           });
