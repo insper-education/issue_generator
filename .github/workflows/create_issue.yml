@@ -1,0 +1,120 @@
+name: Create Issue on First Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check for open issues
+      id: check_issues
+      run: |
+        ISSUES=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \\n       -H "Accept: application/vnd.github.v3+json" \\n       https://api.github.com/repos/${{ github.repository }}/issues?state=open)
+        COUNT=$(echo "$ISSUES" | jq '. | length')
+        if [[ "$COUNT" -eq 0 ]]; then
+          echo "::set-output name=has_issues::false"
+        else
+          echo "::set-output name=has_issues::true"
+        fi
+      continue-on-error: true
+
+    - name: 1 - Pino Buzzer
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '1 - Pino Buzzer',
+            body: '\nDefinir e configurar pino que será usado para conectar o buzzer.\n- [ ] Atualizar `README.md` com definição do pino.\n- [ ] Inserir `#defines` no  `main.c` com valores certos\n```c\n#define BUZZER_PIO\n#define BUZZER_PIO_ID\n#define BUZZER_PIO_IDX\n#define BUZZER_PIO_IDX_MASK\n```\n- [ ] Atualizar função  `init()` configurando o pino do buzzer como output\nDicas (opcional):\n- [ ] Criar função `void set_buzzer();` que coloca 1 no pino do buzzer\n- [ ] Criar função `void clear_buzzer();` que coloca 0 no pino do buzzer'
+          }
+          github.issues.create(issue)
+
+    - name: 2 - Pino botão start/pause
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '2 - Pino botão start/pause',
+            body: '\n    Definir e configurar pino que será usado para conectar o botão de start/pause.\n    - [ ] Atualizar `README.md` com definição do pino.\n    - [ ] Inserir `#defines` no  `main.c` com valores certos\n    ```c\n    #define START_PIO\n    #define START_PIO_ID\n    #define START_PIO_IDX\n    #define START_PIO_IDX_MASK\n    ```\n    - [x] Atualizar função  `init()` configurando o pino do botão como input\n    Dicas (opcional):\n    - [ ] Criar função `int get_startstop();` que retorna o status do botão (1/0)\n'
+          }
+          github.issues.create(issue)
+
+    - name: 3 - Pino seleção musica
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '3 - Pino seleção musica',
+            body: '\n    Definir e configurar pino que será usado para conectar o botão de seleção musical.\n    - [ ] Atualizar `README.md` com definição do pino.\n    - [ ] Inserir `#defines` no  `main.c` com valores certos\n    ```c\n    #define SELECAO_PIO\n    #define SELECAO_PIO_ID\n    #define SELECAO_PIO_IDX\n    #define SELECAO_PIO_IDX_MASK\n    ```\n    - [ ] Atualizar função  `init()` configurando o pino do botão como input\n    Dicas (opcional):\n    - [ ] Criar função `int get_selecao();` que retorna o status do botão (1/0)\n'
+          }
+          github.issues.create(issue)
+
+    - name: 4 - buzzer_test(int freq)
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '4 - buzzer_test(int freq)',
+            body: '\n    Crie uma função (buzzer_test(int freq)) que gera no pino do\n    buzzer uma onda quadrada de frequência definida, para isso você\n    deve usar:\n    - `pio_set()`\n    - `pio_clear()`\n    - `delay_ns()` / `delay_ms`\n    :warning: Lembre que a frequência é definido em Hz.\n    - [ ] Implementar funcão\n    - [ ] Link para um vídeo da função funcionando\n'
+          }
+          github.issues.create(issue)
+
+    - name: 5 - Função tone
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '5 - Função tone',
+            body: '\n    Criar função `tone` que gera um tom no pino do buzzer. Para\n    mais informações acesse:\n    - https://insper.github.io/ComputacaoEmbarcada/APS-1-Musical-software/#tone\n    Para validar execute algumas notas por tempos diferentes.\n    ```c\n    for (int freq=200; freq<5000; freq+=500){\n      tone(freq, 200 + freq/2);\n      delay_ms(200);\n    }\n    ```\n'
+          }
+          github.issues.create(issue)
+
+    - name: 6 - Pino Buzzer
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '6 - Pino Buzzer',
+            body: '\n    Incorporar no código `#define` das notas\n    e também vetor `melody` que define a música (tom e tempo).\n    **Entenda o código exemplo antes de seguir em frente.**\n    Usar como base a música do super Mario Bros:\n    - https://github.com/robsoncouto/arduino-songs/blob/3b8ed10f644cb150bc3fe39c854546f5b9331f71/supermariobros/supermariobros.ino#L9\n    - Variáveis: `tempo`, `notes`, `wholenote`, `divider`, `noteDuration`\n'
+          }
+          github.issues.create(issue)
+
+    - name: 7 - Pino Buzzer
+      if: steps.check_issues.outputs.has_issues == 'false'
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.ISSUE_GENERATOR}}
+        script: |
+          const issue = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '7 - Pino Buzzer',
+            body: '\n    Incorporar `for` que varre a música e chama a função tone.\n    **Entenda o código exemplo antes de seguir em frente.**\n    - https://github.com/robsoncouto/arduino-songs/blob/3b8ed10f644cb150bc3fe39c854546f5b9331f71/supermariobros/supermariobros.ino#L213\n    Se tudo tiver certo quando executar o código vocês devem escutar a música do Mario.\n    Dicas:\n    - **Antes de tudo, entenda o código!!!**\n    - A função `tone` que criamos é diferente da função `tone` do exemplo\n    - A função `delay` é diferente\n    - Remover a chamada de função `noTone` (diferente do arduino nós não precisamos dela)\n'
+          }
+          github.issues.create(issue)
