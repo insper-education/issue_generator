@@ -33,4 +33,4 @@ Contribuições são sempre bem-vindas! Se você identificar erros ou desejar ad
 1. Faça um fork deste repositório.
 2. Crie uma nova branch.
 3. Realize suas alterações.
-4. Abra um Pull Request para integrar suas mudanças.
+4. Abra um Pull Request para integrar suas mudanças. 
