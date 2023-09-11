@@ -35,7 +35,7 @@ jobs:
           const fs = require('fs');
           const path = require('path');
           const util = require('util');
-          const issueDir = './issues'; // Replace with the actual directory path
+          const issueDir = '.github/issues'; // Replace with the actual directory path
 
           const sleep = util.promisify(setTimeout);
 
