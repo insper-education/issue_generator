@@ -1,14 +1,20 @@
-# Create Issue on First Push
+# Issues Generator
+O "Issues Generator" é um repositório template projetado para automatizar a criação de issues quando um aluno aceita uma tarefa via GitHub Classroom.
 
-## Instalation
+# Funcionamento
+Este repositório utiliza uma automação para criar issues apenas quando o aluno aceita a atividade do gitclassroom. Os issues são baseados em arquivos .md presentes dentro do diretório `.github/issues`. Cada arquivo corresponde a um issue, e o nome do arquivo é usado como título do issue.
 
-Para criar um issues no repositorio eh nescessario criar um github secret com o nome **SECRET** e contendo uma chave PAT de um repositorio com direito a escrita.
+## Como os Issues são Criados
+Quando um push é feito na branch main, uma GitHub Action é acionada. Esta Action verifica se há issues abertos no repositório. Se não houver issues abertos, a Action lê os arquivos .md do diretório especificado e cria um issue para cada arquivo, usando o conteúdo do arquivo como corpo do issue. Devido a limitacoes do trigger do github action, este metodo criara os issues novamente se o aluno fechar todos os issues em seu repositorio e dar um novo commit.
 
-## Funcionamento
+# Sobre o "insper_bot"
+Os issues são criados em nome do usuário "insper_bot". Este bot possui uma chave de acesso (Personal Access Token) que lhe permite criar issues que esta disponiveis como um segredo da organizacao insper_classroom com o nome `ISSUE_GENERATOR`. Por razões de segurança, esta chave pertence exclusivamente ao "insper_bot" e não deve ser compartilhada ou exposta.
 
-Este action cria um issue nos repositorios dos alunos **APOS** o primeiro push.
+# Instalacao
+Para utilizar essa automacao voce pode criar em fork deste reositorio ou copiar a pasta oculta `.github` para o template-repositorio que voce vai utilizar em sua atividade.
 
-A action consiste de dois estagios, *Check for open issues* conta o numero de issues **abertos** salvando em uma variavel booleana (True se existem open-issues). 
+## Criando seus próprios Issues após o Fork
+Modifique ou arquivos .md dentro do diretório `.github/issues`. Cada arquivo corresponde a um issue, e o nome do arquivo é usado como título do issue.
 
-O ssegundo estagio cria um novo issue, customize modificando *title* e *body*.
-sdsdsdsdsaaaaaa
+# Contribuindo
+Se você encontrar erros ou quiser contribuir de alguma forma, siga o processo de fork, crie uma nova branch, faça suas alterações e, em seguida, abra um Pull Request.
