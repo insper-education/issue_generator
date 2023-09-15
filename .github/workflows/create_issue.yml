@@ -17,7 +17,7 @@ jobs:
       run: |
         ISSUES=$(curl -H "Authorization: token ${{ secrets.INSPER_BOT }}" \
                      -H "Accept: application/vnd.github.v3+json" \
-                     https://api.github.com/repos/${{ github.repository }}/issues?state=open)
+                     https://api.github.com/repos/${{ github.repository }}/issues?state=all)
         COUNT=$(echo "$ISSUES" | jq '. | length')
         if [[ "$COUNT" -eq 0 ]]; then
           echo "::set-output name=has_issues::false"
